@@ -772,7 +772,7 @@ function App() {
             ))}
           </div>
 
-          <section className="admin-dashboard">
+          {/* <section className="admin-dashboard">
             <div className="admin-dashboard-header">
               <div>
                 <p className="admin-dashboard-kicker">Admin Console</p>
@@ -820,7 +820,7 @@ function App() {
                 </table>
               </div>
             )}
-          </section>
+          </section> */}
 
           {/* Footer Trust Badges */}
           <div className="trust-badges-container">
