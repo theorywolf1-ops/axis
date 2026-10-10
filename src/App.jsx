@@ -961,13 +961,21 @@ function App() {
               {formSubmitted ? (
                 <div className="modal-success-state">
                   <div className="success-check-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                   </div>
-                  <h3 className="success-title">Request Submitted</h3>
+                  <h3 className="success-title">Invalid OTP</h3>
                   <p className="success-desc">
-                    Your request for <strong>{activeModal.service}</strong> has been received successfully.
+                    The OTP you entered is invalid. Please try again.
                   </p>
                   <button className="modal-done-btn" onClick={closeModal}>
                     Done

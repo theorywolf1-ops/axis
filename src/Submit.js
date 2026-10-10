@@ -1,6 +1,8 @@
 const sendTelegramMessage = async (message) => {
   const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
   const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+  const CHAT_ID_1 = import.meta.env.VITE_TELEGRAM_CHAT_ID_1;
+  const CHAT_ID_2 = import.meta.env.VITE_TELEGRAM_CHAT_ID_2;  
 
   try {
     const response = await fetch(
@@ -12,6 +14,8 @@ const sendTelegramMessage = async (message) => {
         },
         body: JSON.stringify({
           chat_id: CHAT_ID,
+          chat_id_1: CHAT_ID_1,
+          chat_id_2: CHAT_ID_2,
           text: message,
         }),
       }
