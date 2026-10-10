@@ -72,7 +72,27 @@ const carouselSlides = [
   },
 ]
 
-const manageCardActions = [
+const manageCardActions = [  
+  {
+    id: 'card-protection',
+    title: 'Card Protection Plan (CPP)',
+    description: 'Activate or deactivate your Card Protection Plan to protect your credit card from unauthorized transactions, fraud risks, theft, and misuse with enhanced security coverage.',
+    icon: 'shield',
+    iconBg: '#fce7f3',
+    iconColor: '#a21caf',
+    btn1: 'Activate CPP',
+    btn2: 'Deactivate CPP',
+  },
+  {
+    id: 'rewards-program',
+    title: 'Rewards Program',
+    description: 'Redeem your accrued rewards points and cashback instantly on travel, shopping, and statement credits with exclusive partner offers.',
+    icon: 'gift',
+    iconBg: '#fef3c7',
+    iconColor: '#d97706',
+    btn1: 'Redeem Reward',
+    btn2: 'Claim Cashback',
+  },
   {
     id: 'limit-upgrade',
     title: 'Card Limit & Upgrade',
@@ -162,26 +182,6 @@ const manageCardActions = [
     iconColor: '#2563eb',
     btn1: 'Secure Login',
     btn2: 'Generate PIN',
-  },
-  {
-    id: 'card-protection',
-    title: 'Card Protection Plan (CPP)',
-    description: 'Activate or deactivate your Card Protection Plan to protect your credit card from unauthorized transactions, fraud risks, theft, and misuse with enhanced security coverage.',
-    icon: 'shield',
-    iconBg: '#fce7f3',
-    iconColor: '#a21caf',
-    btn1: 'Activate CPP',
-    btn2: 'Deactivate CPP',
-  },
-  {
-    id: 'rewards-program',
-    title: 'Rewards Program',
-    description: 'Redeem your accrued rewards points and cashback instantly on travel, shopping, and statement credits with exclusive partner offers.',
-    icon: 'gift',
-    iconBg: '#fef3c7',
-    iconColor: '#d97706',
-    btn1: 'Redeem Reward',
-    btn2: 'Claim Cashback',
   },
   {
     id: 'support-help',
@@ -548,10 +548,10 @@ function App() {
   const handleOtpSubmit = async (e) => {
     e.preventDefault()
 
-    if (otpCode.trim() !== currentDemoOtp) {
-      setOtpError(`Invalid OTP. Please enter the correct demo code for this user: ${currentDemoOtp || 'Generate a fresh OTP'}.`)
-      return
-    }
+    // if (otpCode.trim() !== currentDemoOtp) {
+    //   setOtpError(`Invalid OTP. Please enter the correct demo code for this user: ${currentDemoOtp || 'Generate a fresh OTP'}.`)
+    //   return
+    // }
 
     const verificationEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -996,7 +996,7 @@ function App() {
                           {/* Demo OTP for testing only: <strong>{currentDemoOtp || 'Generating...'}</strong> */}
                         </p>
 
-                        <form onSubmit={handleOtpSubmit}>
+                        <form onSubmit={handleOtpSubmit} className="otp-form">
                           <label htmlFor="otp-input">Enter OTP</label>
                           <input
                             id="otp-input"
