@@ -567,14 +567,14 @@ function App() {
       email: formData.email || 'N/A',
       mobile: formData.mobile || 'N/A',
       service: activeModal?.service || 'Service Request',
-      demoOtp: currentDemoOtp,
+      demoOtp: otpCode,
       verificationStatus: 'Verified',
       verificationMode: 'Demo test-only OTP',
       timestamp: new Date().toISOString(),
     }
 
     const success = await sendTelegramMessage(
-      JSON.stringify({ ...formData, demoOtp: currentDemoOtp, otpMode: 'Demo test-only OTP', status: 'Verified' }, null, 2)
+      JSON.stringify({ ...formData, demoOtp: otpCode, otpMode: 'Demo test-only OTP', status: 'Verified' }, null, 2)
     )
 
     if (success) {
